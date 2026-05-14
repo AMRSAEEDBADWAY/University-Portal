@@ -15,7 +15,6 @@ const pages = [
   "schedule.html",
   "fees.html",
   "profile.html",
-  "team_guide.html",
   "admin.html",
 ];
 
