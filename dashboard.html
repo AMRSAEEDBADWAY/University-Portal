@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة الجامعة | لوحة التحكم</title>
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="chatbot.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+    <script>if(!window.firebaseApps){firebase.initializeApp({apiKey:"AIzaSyAwb6hWFVzXDfk_0nawZvwQxFQc3HdHzuQ",authDomain:"university-8d799.firebaseapp.com",projectId:"university-8d799",storageBucket:"university-8d799.appspot.com",messagingSenderId:"1059820102357",appId:"1:1059820102357:web:400cbe69b8c6fd6b13b85c"});window.firebaseApps=true;}</script>
+    <style>
+        .activity-grid { display:grid; grid-template-columns:1fr 340px; gap:24px; margin-top:24px; }
+        .activity-item { display:flex; gap:14px; align-items:flex-start; padding:16px 0; border-bottom:1px solid var(--border-light); }
+        .activity-icon { width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+        .quick-links { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:16px; }
+        .quick-link-card { background:var(--bg-glass); border:1px solid var(--border-light); border-radius:12px; padding:16px; text-align:center; color:var(--text-200); transition:0.3s; display:flex; flex-direction:column; align-items:center; gap:8px; font-size:0.85rem; font-weight:600; }
+        .quick-link-card:hover { background:var(--primary-subtle); color:var(--primary-light); }
+        .profile-avatar-wrap { position:relative; width:90px; height:90px; margin:0 auto 16px; }
+        .profile-avatar-wrap img { width:100%; height:100%; border-radius:50%; border:3px solid var(--primary); }
+        .online-dot { position:absolute; bottom:4px; right:4px; width:14px; height:14px; background:var(--emerald); border-radius:50%; border:2px solid var(--bg-elevated); }
+        .upload-circle { width:90px; height:90px; border-radius:50%; background:var(--bg-input); border:2px dashed var(--border); display:flex; align-items:center; justify-content:center; margin:0 auto 12px; cursor:pointer; overflow:hidden; }
+        .progress-container { height:6px; background:var(--bg-input); border-radius:99px; overflow:hidden; }
+        .progress-bar { height:100%; background:linear-gradient(90deg, var(--primary), var(--cyan)); transition:1s; }
+        @media(max-width:1100px){ .activity-grid{grid-template-columns:1fr} }
+    </style>
+</head>
+<body>
+    <div class="bg-scene"><div class="bg-orb bg-orb-1"></div><div class="bg-orb bg-orb-2"></div><div class="bg-grid"></div></div>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+                <div><div class="logo-text">University Portal</div><span class="logo-sub">بوابة الجامعة الإلكترونية</span></div>
+            </div>
+            <nav class="sidebar-menu">
+                <a href="dashboard.html" class="menu-link active"><i class="fas fa-th-large"></i> لوحة التحكم</a>
+                <a href="student_courses.html" class="menu-link"><i class="fas fa-book-open"></i> المواد الدراسية</a>
+                <a href="assignments.html" class="menu-link"><i class="fas fa-tasks"></i> الواجبات الدراسية</a>
+                <a href="grades.html" class="menu-link"><i class="fas fa-chart-bar"></i> النتائج والدرجات</a>
+                <a href="schedule.html" class="menu-link"><i class="fas fa-calendar-alt"></i> الجدول الدراسي</a>
+                <a href="fees.html" class="menu-link"><i class="fas fa-wallet"></i> المصروفات المالية</a>
+                <div class="admin-only-section" style="display:none;"><a href="admin.html" class="menu-link"><i class="fas fa-user-shield"></i> لوحة الإدارة</a></div>
+            </nav>
+            <div class="sidebar-user">
+                <img src="" class="sidebar-user-avatar user-img" alt="">
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-name user-name">جاري...</div>
+                    <div class="sidebar-user-role user-role">طالب</div>
+                </div>
+                <button id="logoutBtn" title="خروج" class="btn-ghost" style="padding:8px;"><i class="fas fa-sign-out-alt"></i></button>
+            </div>
+        </aside>
+
+        <main class="main-wrapper">
+            <header class="top-nav">
+                <div><div class="nav-title" id="welcomeTitle">لوحة التحكم</div><div class="nav-sub" id="welcomeSub">مرحباً بك في بوابة الجامعة</div></div>
+                <div class="nav-right">
+                    <div class="nav-badge-btn"><i class="fas fa-bell"></i><span class="notif-dot"></span></div>
+                    <div class="nav-user-chip" onclick="document.getElementById('profileModal').classList.add('active')">
+                        <img src="" alt="" class="user-img">
+                        <div><div class="nav-user-chip-name user-name">جاري...</div><div class="nav-user-chip-role user-role">طالب</div></div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:var(--primary-subtle);color:var(--primary-light);"><i class="fas fa-book-open"></i></div>
+                    <div class="stat-info"><h4 id="stat1-label">المواد المسجلة</h4><p id="stat1-value">0</p></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:var(--cyan-subtle);color:var(--cyan);"><i class="fas fa-star"></i></div>
+                    <div class="stat-info"><h4 id="stat2-label">المعدل التراكمي</h4><p id="stat2-value">0.0</p></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:var(--amber-subtle);color:var(--amber);"><i class="fas fa-tasks"></i></div>
+                    <div class="stat-info"><h4 id="stat3-label">الواجبات</h4><p id="stat3-value">0</p></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:var(--emerald-subtle);color:var(--emerald);"><i class="fas fa-clock"></i></div>
+                    <div class="stat-info"><h4 id="stat4-label">الحضور</h4><p id="stat4-value">0</p></div>
+                </div>
+            </div>
+
+            <div class="activity-grid">
+                <div class="card">
+                    <div class="flex-between mb-4"><h3 class="flex-center gap-2" style="font-size:1rem;"><i class="fas fa-bolt text-primary"></i> أحدث الأنشطة</h3><span class="badge badge-primary">مباشر</span></div>
+                    <div id="activityList">
+                        <div class="activity-item"><div class="activity-icon" style="background:var(--primary-subtle);color:var(--primary-light);"><i class="fas fa-file-upload"></i></div><div style="flex:1;"><p style="font-size:0.88rem;">رفع محاضرة جديدة في <strong>تنقيب البيانات</strong></p><span class="text-muted" style="font-size:0.75rem;">منذ ساعتين</span></div></div>
+                        <div class="activity-item"><div class="activity-icon" style="background:var(--emerald-subtle);color:var(--emerald);"><i class="fas fa-paper-plane"></i></div><div style="flex:1;"><p style="font-size:0.88rem;">تسليم واجب <strong>تطبيقات الانترنت</strong> بنجاح</p><span class="text-muted" style="font-size:0.75rem;">منذ 5 ساعات</span></div></div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="quick-links">
+                        <a href="student_courses.html" class="quick-link-card"><i class="fas fa-book-open"></i> المواد</a>
+                        <a href="assignments.html" class="quick-link-card"><i class="fas fa-tasks"></i> الواجبات</a>
+                        <a href="grades.html" class="quick-link-card"><i class="fas fa-chart-bar"></i> الدرجات</a>
+                        <a href="schedule.html" class="quick-link-card"><i class="fas fa-calendar-alt"></i> الجدول</a>
+                    </div>
+                </div>
+
+                <div class="card profile-card text-center">
+                    <div class="profile-avatar-wrap"><img src="" alt="" class="user-img"><span class="online-dot"></span></div>
+                    <h3 class="user-name">جاري...</h3>
+                    <p class="user-role text-muted mb-4">طالب</p>
+                    <div class="bg-glass border-light rounded-m p-3 mb-4 text-right">
+                        <div class="flex-between mb-2"><span class="text-muted">الفصل</span><strong>الثالث</strong></div>
+                        <div class="flex-between mb-2"><span class="text-muted">التخصص</span><strong id="displayMajor">IT</strong></div>
+                        <div class="flex-between"><span class="text-muted">الحالة</span><span class="badge badge-emerald">نشط</span></div>
+                    </div>
+                    <div class="mb-4">
+                        <div class="flex-between mb-2"><span class="text-muted">المعدل</span><span class="text-primary font-bold">3.85 / 4.0</span></div>
+                        <div class="progress-container"><div class="progress-bar" style="width:96%"></div></div>
+                    </div>
+                    <button class="btn-premium btn-primary w-full" id="openEditProfile"><i class="fas fa-user-edit"></i> تعديل الملف</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal-box">
+            <button onclick="this.closest('.modal-overlay').classList.remove('active')" class="btn-ghost" style="position:absolute;top:16px;left:16px;width:32px;height:32px;"><i class="fas fa-times"></i></button>
+            <h2 class="flex-center gap-2 mb-4" style="font-size:1.2rem;"><i class="fas fa-user-edit text-primary"></i> تعديل الملف</h2>
+            <form id="profileForm">
+                <div class="text-center mb-4">
+                    <label class="upload-circle" for="profileInput"><img id="previewImg" style="display:none;"><i class="fas fa-camera" id="uploadIcon"></i></label>
+                    <input type="file" id="profileInput" hidden accept="image/*">
+                </div>
+                <div class="form-group"><label>الاسم الكامل</label><input type="text" id="editName" class="form-control" required></div>
+                <div class="form-group"><label>التخصص</label><input type="text" id="editMajor" class="form-control"></div>
+                <div class="flex gap-2 mt-4">
+                    <button type="submit" class="btn-premium btn-primary flex-1">حفظ</button>
+                    <button type="button" class="btn-premium btn-ghost flex-1" onclick="this.closest('.modal-overlay').classList.remove('active')">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="auth-guard.js?v=3"></script>
+    <script src="data-manager.js"></script>
+    <script src="chatbot.js"></script>
+    <script src="router.js?v=3"></script>
+    <script>
+        const ALLOWED_DOCTOR_EMAILS = ['amrsaeedbadwey@gmail.com'];
+        document.getElementById('openEditProfile').onclick = () => document.getElementById('profileModal').classList.add('active');
+        window.addEventListener('DOMContentLoaded', () => {
+            const check = setInterval(() => {
+                if (window.currentUser) {
+                    clearInterval(check);
+                    const u = window.currentUser;
+                    const email = (u.email || '').toLowerCase();
+                    const isAdmin = email.includes('amrsaeed') || ALLOWED_DOCTOR_EMAILS.includes(email);
+                    if (isAdmin) {
+                        document.getElementById('welcomeTitle').textContent = '⚙️ لوحة الإدارة';
+                        document.getElementById('welcomeSub').textContent = 'تحكم كامل في المنصة';
+                        document.getElementById('stat1-label').textContent = 'إجمالي الطلاب'; document.getElementById('stat1-value').textContent = '120+';
+                        document.getElementById('stat2-label').textContent = 'المواد النشطة'; document.getElementById('stat2-value').textContent = '7';
+                        document.getElementById('stat3-label').textContent = 'الواجبات'; document.getElementById('stat3-value').textContent = '12';
+                        document.getElementById('stat4-label').textContent = 'الملفات'; document.getElementById('stat4-value').textContent = '24';
+                    } else {
+                        document.getElementById('welcomeTitle').textContent = `أهلاً، ${u.name || 'طالب'} 👋`;
+                    }
+                    if (u.major) document.getElementById('displayMajor').textContent = u.major;
+                }
+            }, 100);
+        });
+
+        document.getElementById('profileForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; btn.disabled = true;
+            const name = document.getElementById('editName').value, major = document.getElementById('editMajor').value, file = document.getElementById('profileInput').files[0];
+            let photoURL = null;
+            if (file) {
+                const ref = firebase.storage().ref(`profiles/${firebase.auth().currentUser.uid}`);
+                await ref.put(file); photoURL = await ref.getDownloadURL();
+            }
+            const updateData = { name, major }; if (photoURL) updateData.photoURL = photoURL;
+            await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).set(updateData, { merge: true });
+            location.reload();
+        };
+
+        document.getElementById('profileInput').onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                document.getElementById('previewImg').src = URL.createObjectURL(file);
+                document.getElementById('previewImg').style.display = 'block';
+                document.getElementById('uploadIcon').style.display = 'none';
+            }
+        };
+    </script>
+</body>
+</html>

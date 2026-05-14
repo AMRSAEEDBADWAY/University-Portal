@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة الجامعة | النتائج والدرجات</title>
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="chatbot.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+    <script>if(!window.firebaseApps){firebase.initializeApp({apiKey:"AIzaSyAwb6hWFVzXDfk_0nawZvwQxFQc3HdHzuQ",authDomain:"university-8d799.firebaseapp.com",projectId:"university-8d799",storageBucket:"university-8d799.firebasestorage.app",messagingSenderId:"1059820102357",appId:"1:1059820102357:web:400cbe69b8c6fd6b13b85c"});window.firebaseApps=true;}</script>
+    <style>
+        .grades-table { width:100%; border-collapse:collapse; margin-top:20px; }
+        .grades-table th { padding:15px; text-align:right; color:var(--primary-light); border-bottom:2px solid var(--border); }
+        .grades-table td { padding:15px; border-bottom:1px solid var(--border-light); }
+        .charts-grid { display:grid; grid-template-columns:1fr 1fr; gap:30px; }
+        @media(max-width:992px){ .charts-grid { grid-template-columns:1fr; } }
+    </style>
+</head>
+<body>
+    <div class="bg-scene"><div class="bg-orb bg-orb-1"></div><div class="bg-orb bg-orb-2"></div><div class="bg-grid"></div></div>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+                <div><div class="logo-text">University Portal</div><span class="logo-sub">بوابة الجامعة الإلكترونية</span></div>
+            </div>
+            <nav class="sidebar-menu">
+                <a href="dashboard.html" class="menu-link"><i class="fas fa-th-large"></i> لوحة التحكم</a>
+                <a href="student_courses.html" class="menu-link"><i class="fas fa-book-open"></i> المواد الدراسية</a>
+                <a href="assignments.html" class="menu-link"><i class="fas fa-tasks"></i> الواجبات الدراسية</a>
+                <a href="grades.html" class="menu-link active"><i class="fas fa-chart-bar"></i> النتائج والدرجات</a>
+                <a href="schedule.html" class="menu-link"><i class="fas fa-calendar-alt"></i> الجدول الدراسي</a>
+                <a href="fees.html" class="menu-link"><i class="fas fa-wallet"></i> المصروفات المالية</a>
+                <div class="admin-only-section" style="display:none;"><a href="admin.html" class="menu-link"><i class="fas fa-user-shield"></i> لوحة الإدارة</a></div>
+            </nav>
+            <div class="sidebar-user">
+                <img src="" class="sidebar-user-avatar user-img" alt="">
+                <div class="sidebar-user-info"><div class="sidebar-user-name user-name">جاري...</div><div class="sidebar-user-role user-role">طالب</div></div>
+                <button id="logoutBtn" title="خروج" class="btn-ghost" style="padding:8px;"><i class="fas fa-sign-out-alt"></i></button>
+            </div>
+        </aside>
+
+        <main class="main-wrapper">
+            <header class="top-nav">
+                <div><div class="nav-title" id="gpaLabel">نتائج الطالب والمعدل التراكمي</div><div class="nav-sub">المعدل الحالي: <strong class="text-primary">3.85 / 4.0</strong></div></div>
+                <div class="nav-right" id="doctorGradeControls" style="display:none;">
+                    <button class="btn-premium btn-primary" onclick="alert('يمكنك الآن رصد الدرجات مباشرة من الجدول.')"><i class="fas fa-edit"></i> رصد الدرجات</button>
+                </div>
+            </header>
+
+            <div class="charts-grid">
+                <div class="card"><h2><i class="fas fa-chart-line text-primary"></i> تحليل الأداء</h2><canvas id="gpaChart" style="margin-top:20px;"></canvas></div>
+                <div class="card"><h2><i class="fas fa-brain text-cyan"></i> نقاط القوة</h2><canvas id="radarChart" style="margin-top:20px;"></canvas></div>
+            </div>
+
+            <div class="card mt-6">
+                <div class="flex-between mb-4"><h2><i class="fas fa-table text-primary"></i> كشف الدرجات التفصيلي</h2><span class="badge badge-primary">الفصل الحالي</span></div>
+                <div style="overflow-x:auto;">
+                    <table class="grades-table">
+                        <thead><tr><th>المادة</th><th>الساعات</th><th>أعمال السنة</th><th>الفاينال</th><th>التقدير</th></tr></thead>
+                        <tbody>
+                            <tr><td>هندسة البرمجيات</td><td>3</td><td>38/40</td><td>55/60</td><td><span class="badge badge-emerald">امتياز (A+)</span></td></tr>
+                            <tr><td>تنقيب البيانات</td><td>3</td><td>35/40</td><td>52/60</td><td><span class="badge badge-emerald">امتياز (A)</span></td></tr>
+                            <tr><td>الذكاء الاصطناعي</td><td>3</td><td>32/40</td><td>48/60</td><td><span class="badge badge-primary">جيد جداً (B+)</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="grades.js"></script>
+    <script src="auth-guard.js?v=3"></script>
+    <script src="chatbot.js"></script>
+    <script src="router.js?v=3"></script>
+    <script>
+        const ALLOWED_DOCTOR_EMAILS = ['amrsaeedbadwey@gmail.com'];
+        window.addEventListener('DOMContentLoaded', () => {
+            const checkDoc = setInterval(() => {
+                if (window.currentUser) {
+                    clearInterval(checkDoc);
+                    const email = (window.currentUser.email || '').toLowerCase();
+                    if (window.isAdmin || email.includes('amrsaeed') || ALLOWED_DOCTOR_EMAILS.includes(email)) {
+                        document.getElementById('doctorGradeControls').style.display = 'flex';
+                        document.getElementById('gpaLabel').textContent = 'إدارة نتائج الطلاب';
+                    }
+                }
+            }, 100);
+        });
+    </script>
+</body>
+</html>
+
+
+

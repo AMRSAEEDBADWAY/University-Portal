@@ -1,0 +1,972 @@
+/* 
+   ================================================================
+   STUDENT ASSIGNMENTS PAGE — Member 4 (Rafik)
+   Design System: #0B1121 (BG), #151E32 (Card), #2563EB (Primary)
+   Font: Cairo (Google Fonts)
+   ================================================================
+*/
+
+/* ===================== PAGE HEADER ===================== */
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 35px;
+    animation: slideDown 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.page-header h1 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.page-header h1 i {
+    color: var(--primary);
+    font-size: 1.5rem;
+}
+
+.assignments-summary {
+    display: flex;
+    gap: 12px;
+}
+
+.summary-chip {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 8px 18px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.summary-chip .chip-count {
+    background: var(--primary);
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 800;
+}
+
+/* ===================== TABS ===================== */
+.tabs-container {
+    display: flex;
+    gap: 6px;
+    background: var(--bg-card);
+    padding: 6px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    margin-bottom: 30px;
+    animation: slideUp 0.5s ease-out 0.1s both;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 14px 20px;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.tab-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--primary);
+    opacity: 0;
+    border-radius: 12px;
+    transition: opacity 0.3s ease;
+}
+
+.tab-btn:hover::before {
+    opacity: 0.08;
+}
+
+.tab-btn.active {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 8px 25px var(--primary-glow);
+}
+
+.tab-btn.active::before {
+    opacity: 0;
+}
+
+.tab-btn .tab-count {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+}
+
+.tab-btn.active .tab-count {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.tab-btn i {
+    font-size: 1.1rem;
+}
+
+/* ===================== ASSIGNMENTS LIST ===================== */
+.assignments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    animation: slideUp 0.6s ease-out 0.2s both;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* ===================== ASSIGNMENT CARD ===================== */
+.assignment-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+    animation: cardSlideIn 0.5s ease-out both;
+}
+
+.assignment-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 4px;
+    height: 100%;
+    border-radius: 0 4px 4px 0;
+    transition: var(--transition);
+}
+
+.assignment-card.priority-high::before { background: linear-gradient(to bottom, #FF4757, #FF6B81); }
+.assignment-card.priority-medium::before { background: linear-gradient(to bottom, #FDCB6E, #FFEAA7); }
+.assignment-card.priority-low::before { background: linear-gradient(to bottom, #00CEC9, #81ECEC); }
+
+.assignment-card:hover {
+    transform: translateY(-5px) scale(1.01);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    border-color: var(--primary);
+    background: rgba(21, 30, 50, 0.95);
+}
+
+.assignment-card.priority-high {
+    animation: urgentPulse 3s infinite;
+}
+
+@keyframes urgentPulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.2); }
+    50% { box-shadow: 0 0 20px 5px rgba(255, 71, 87, 0.1); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.2); }
+}
+
+/* Course Badge (Icon) */
+.course-badge {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    flex-shrink: 0;
+}
+
+.course-badge.ai { background: rgba(99, 102, 241, 0.12); color: #818CF8; }
+.course-badge.db { background: rgba(14, 165, 233, 0.12); color: #38BDF8; }
+.course-badge.web { background: rgba(232, 67, 147, 0.12); color: #E84393; }
+.course-badge.math { background: rgba(253, 203, 110, 0.12); color: #FDCB6E; }
+.course-badge.os { background: rgba(0, 206, 201, 0.12); color: #00CEC9; }
+.course-badge.network { background: rgba(108, 92, 231, 0.12); color: #6C5CE7; }
+
+/* Card Info */
+.assignment-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.assignment-info h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.assignment-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+}
+
+.meta-item i {
+    font-size: 0.9rem;
+    color: var(--primary);
+}
+
+.course-label {
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--primary);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+/* ===================== COUNTDOWN ===================== */
+.countdown-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-width: 160px;
+}
+
+.countdown-timer {
+    display: flex;
+    gap: 6px;
+    direction: ltr;
+}
+
+.countdown-unit {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 8px 6px;
+    min-width: 48px;
+    text-align: center;
+}
+
+.countdown-unit .count-value {
+    display: block;
+    font-size: 1.3rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 2px;
+}
+
+.countdown-unit .count-label {
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Countdown color states */
+.countdown-timer.danger .count-value { color: #FF4757; }
+.countdown-timer.warning .count-value { color: #FDCB6E; }
+.countdown-timer.safe .count-value { color: #00CEC9; }
+
+.countdown-label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+/* ===================== ACTION BUTTONS ===================== */
+.card-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 140px;
+}
+
+.btn-submit {
+    background: var(--primary);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 6px 20px var(--primary-glow);
+}
+
+.btn-submit:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.15);
+    box-shadow: 0 10px 30px var(--primary-glow);
+}
+
+.btn-view {
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-muted);
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px solid var(--border);
+}
+
+.btn-view:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+    background: rgba(37, 99, 235, 0.05);
+}
+
+/* ===================== STATUS BADGES ===================== */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 16px;
+    border-radius: 30px;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.status-badge.submitted {
+    background: rgba(0, 206, 201, 0.12);
+    color: #00CEC9;
+}
+
+.status-badge.graded {
+    background: rgba(46, 213, 115, 0.12);
+    color: #2ED573;
+}
+
+.status-badge.late {
+    background: rgba(255, 71, 87, 0.12);
+    color: #FF4757;
+}
+
+.status-badge i {
+    font-size: 0.85rem;
+}
+
+/* Grade Display */
+.grade-display {
+    text-align: center;
+    min-width: 100px;
+}
+
+.grade-circle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 6px;
+    font-size: 1.2rem;
+    font-weight: 900;
+    border: 3px solid;
+}
+
+.grade-circle.excellent {
+    border-color: #2ED573;
+    color: #2ED573;
+    background: rgba(46, 213, 115, 0.08);
+}
+
+.grade-circle.good {
+    border-color: #FDCB6E;
+    color: #FDCB6E;
+    background: rgba(253, 203, 110, 0.08);
+}
+
+.grade-circle.poor {
+    border-color: #FF4757;
+    color: #FF4757;
+    background: rgba(255, 71, 87, 0.08);
+}
+
+.grade-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* Feedback text */
+.feedback-text {
+    margin-top: 10px;
+    padding: 12px 16px;
+    background: rgba(37, 99, 235, 0.06);
+    border-radius: 12px;
+    border-right: 3px solid var(--primary);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+}
+
+.feedback-text i {
+    color: var(--primary);
+    margin-left: 6px;
+}
+
+/* ===================== SUBMISSION MODAL ===================== */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(6, 6, 15, 0.85);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition);
+    padding: 20px;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.submit-modal {
+    background: linear-gradient(145deg, #151E32, #0B1121);
+    width: 95%;
+    max-width: 600px;
+    border-radius: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0;
+    animation: modalPopIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+}
+
+@keyframes modalPopIn {
+    from { transform: translateY(30px) scale(0.95); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* Glass effect inside modal */
+.submit-modal::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top right, rgba(108, 92, 231, 0.05), transparent);
+    pointer-events: none;
+}
+
+.modal-header {
+    padding: 24px 30px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modal-header h2 {
+    font-size: 1.2rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal-header h2 i {
+    color: var(--primary);
+}
+
+.modal-close {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+
+.modal-close:hover {
+    background: rgba(255, 71, 87, 0.1);
+    color: #FF4757;
+}
+
+.modal-body {
+    padding: 30px;
+}
+
+/* Assignment info inside modal */
+.modal-assignment-info {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 25px;
+    border: 1px solid var(--border);
+}
+
+.modal-assignment-info h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.modal-assignment-info .deadline-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.modal-assignment-info .deadline-info i {
+    color: #FF4757;
+}
+
+/* Upload Area */
+.upload-area {
+    border: 2px dashed var(--border);
+    border-radius: 20px;
+    padding: 40px 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.upload-area:hover {
+    border-color: var(--primary);
+    background: rgba(37, 99, 235, 0.03);
+}
+
+.upload-area.drag-over {
+    border-color: var(--primary);
+    background: rgba(37, 99, 235, 0.08);
+    transform: scale(1.01);
+}
+
+.upload-area.has-file {
+    border-color: #00CEC9;
+    border-style: solid;
+    background: rgba(0, 206, 201, 0.04);
+}
+
+.upload-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 20px;
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin: 0 auto 16px;
+    transition: var(--transition);
+}
+
+.upload-area:hover .upload-icon {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px var(--primary-glow);
+}
+
+.upload-area.has-file .upload-icon {
+    background: rgba(0, 206, 201, 0.12);
+    color: #00CEC9;
+}
+
+.upload-area h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.upload-area p {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+}
+
+.file-info {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    margin-top: 14px;
+    padding: 12px 16px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+}
+
+.file-info.visible {
+    display: flex;
+}
+
+.file-info i {
+    color: #FF4757;
+    font-size: 1.5rem;
+}
+
+.file-info .file-details {
+    flex: 1;
+    text-align: right;
+}
+
+.file-info .file-name {
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+.file-info .file-size {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.file-info .remove-file {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(255, 71, 87, 0.1);
+    color: #FF4757;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+
+.file-info .remove-file:hover {
+    background: rgba(255, 71, 87, 0.2);
+}
+
+/* Notes textarea */
+.note-input {
+    width: 100%;
+    min-height: 90px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 18px;
+    color: var(--text-main);
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.9rem;
+    resize: vertical;
+    outline: none;
+    transition: var(--transition);
+    margin-bottom: 20px;
+}
+
+.note-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+.note-input::placeholder {
+    color: var(--text-muted);
+}
+
+/* Modal Footer */
+.modal-footer {
+    padding: 20px 30px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 12px;
+}
+
+.btn-modal-submit {
+    flex: 1;
+    background: var(--primary);
+    color: white;
+    padding: 14px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 8px 25px var(--primary-glow);
+}
+
+.btn-modal-submit:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.15);
+}
+
+.btn-modal-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    filter: none;
+}
+
+.btn-modal-submit .spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+}
+
+.btn-modal-submit.loading .spinner {
+    display: block;
+}
+
+.btn-modal-submit.loading .btn-text {
+    display: none;
+}
+
+.btn-modal-cancel {
+    padding: 14px 24px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-muted);
+    font-weight: 600;
+    border: 1px solid var(--border);
+}
+
+.btn-modal-cancel:hover {
+    background: rgba(255, 71, 87, 0.08);
+    color: #FF4757;
+    border-color: rgba(255, 71, 87, 0.2);
+}
+
+/* ===================== SUCCESS TOAST ===================== */
+.toast-notification {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px 28px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    z-index: 3000;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.toast-notification.show {
+    transform: translateX(-50%) translateY(0);
+}
+
+.toast-notification.success {
+    border-color: rgba(46, 213, 115, 0.3);
+}
+
+.toast-notification.error {
+    border-color: rgba(255, 71, 87, 0.3);
+}
+
+.toast-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.toast-notification.success .toast-icon {
+    background: rgba(46, 213, 115, 0.12);
+    color: #2ED573;
+}
+
+.toast-notification.error .toast-icon {
+    background: rgba(255, 71, 87, 0.12);
+    color: #FF4757;
+}
+
+.toast-text {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* ===================== EMPTY STATE ===================== */
+.empty-state {
+    text-align: center;
+    padding: 80px 40px;
+    animation: fadeIn 0.6s ease;
+}
+
+.empty-state-icon {
+    width: 100px;
+    height: 100px;
+    border-radius: 30px;
+    background: rgba(37, 99, 235, 0.08);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    margin: 0 auto 20px;
+}
+
+.empty-state h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.empty-state p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* ===================== ANIMATIONS ===================== */
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes cardSlideIn {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Stagger animation for cards */
+.assignment-card:nth-child(1) { animation-delay: 0.05s; }
+.assignment-card:nth-child(2) { animation-delay: 0.1s; }
+.assignment-card:nth-child(3) { animation-delay: 0.15s; }
+.assignment-card:nth-child(4) { animation-delay: 0.2s; }
+.assignment-card:nth-child(5) { animation-delay: 0.25s; }
+.assignment-card:nth-child(6) { animation-delay: 0.3s; }
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 900px) {
+    .assignment-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .countdown-section {
+        width: 100%;
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .card-actions {
+        width: 100%;
+        flex-direction: row;
+    }
+
+    .card-actions button {
+        flex: 1;
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .tabs-container {
+        flex-wrap: wrap;
+    }
+
+    .tab-btn {
+        flex: unset;
+        min-width: calc(50% - 4px);
+    }
+
+    .grade-display {
+        min-width: unset;
+    }
+}
+
+@media (max-width: 600px) {
+    .tab-btn span.tab-label {
+        display: none;
+    }
+
+    .tab-btn {
+        min-width: unset;
+        padding: 12px 16px;
+    }
+
+    .summary-chip {
+        font-size: 0.78rem;
+        padding: 6px 12px;
+    }
+
+    .submit-modal {
+        width: 96%;
+        border-radius: 20px;
+    }
+
+    .assignment-info h3 {
+        font-size: 1rem;
+    }
+
+    .countdown-timer {
+        gap: 4px;
+    }
+
+    .countdown-unit {
+        min-width: 42px;
+        padding: 6px 4px;
+    }
+
+    .countdown-unit .count-value {
+        font-size: 1.1rem;
+    }
+}

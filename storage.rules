@@ -1,0 +1,19 @@
+rules_version = '2';
+// ارفع القواعد: firebase deploy --only storage
+// ملفات المحاضرات لكل مادة + تسليمات الطلاب + صور الملفات الشخصية
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /lectures/{path=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
+    }
+    match /submissions/{userId}/{path=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+    match /profiles/{userId}/{path=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}

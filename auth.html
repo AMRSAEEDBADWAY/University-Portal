@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة الجامعة | تسجيل الدخول</title>
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="auth.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script>if(!window.firebaseApps){firebase.initializeApp({apiKey:"AIzaSyAwb6hWFVzXDfk_0nawZvwQxFQc3HdHzuQ",authDomain:"university-8d799.firebaseapp.com",projectId:"university-8d799",storageBucket:"university-8d799.firebasestorage.app",messagingSenderId:"1059820102357",appId:"1:1059820102357:web:400cbe69b8c6fd6b13b85c"});window.firebaseApps=true;}</script>
+</head>
+<body>
+    <div class="bg-scene"><div class="bg-orb bg-orb-1"></div><div class="bg-orb bg-orb-2"></div><div class="bg-grid"></div></div>
+    <div class="auth-wrapper">
+        <div class="auth-card" id="authCard">
+            <div class="card-header"><div class="portal-logo"><div class="logo-icon">🎓</div><span class="logo-text">University Portal</span></div></div>
+            <div class="card-body">
+                <h1 class="step-title">أهلاً بك! 👋</h1>
+                <p class="step-subtitle">سجّل دخولك للوصول إلى المنصة التعليمية</p>
+                <div class="auth-tabs">
+                    <button class="tab-btn active" onclick="switchTab('login')"><i class="fas fa-user-graduate"></i> دخول</button>
+                    <button class="tab-btn" onclick="switchTab('register')"><i class="fas fa-user-plus"></i> جديد</button>
+                    <button class="tab-btn" onclick="switchTab('doctor')"><i class="fas fa-user-tie"></i> دكتور</button>
+                </div>
+                <div class="tab-panel active" id="panelLogin">
+                    <div class="field"><label>البريد الإلكتروني</label><div class="field-wrap"><input type="email" id="loginEmail" placeholder="example@uni.edu.eg"><i class="field-icon fas fa-envelope"></i></div></div>
+                    <div class="field"><label>كلمة السر</label><div class="field-wrap"><input type="password" id="loginPassword" placeholder="••••••••"><i class="field-icon fas fa-lock"></i></div></div>
+                    <button class="btn btn-primary" onclick="handleLogin()"><i class="fas fa-sign-in-alt"></i> دخول</button>
+                    <div class="divider"><span>أو</span></div>
+                    <button class="btn btn-google" onclick="handleGoogleLogin()"><i class="fab fa-google"></i> Google</button>
+                    <div class="msg-box" id="loginMsg"></div>
+                </div>
+                <div class="tab-panel" id="panelRegister">
+                    <div class="field"><label>الاسم الكامل</label><div class="field-wrap"><input type="text" id="regName" placeholder="محمد أحمد"><i class="field-icon fas fa-user"></i></div></div>
+                    <div class="field"><label>البريد الإلكتروني</label><div class="field-wrap"><input type="email" id="regEmail" placeholder="example@uni.edu.eg"><i class="field-icon fas fa-envelope"></i></div></div>
+                    <div class="field"><label>كلمة السر</label><div class="field-wrap"><input type="password" id="regPassword" placeholder="••••••••"><i class="field-icon fas fa-lock"></i></div></div>
+                    <button class="btn btn-primary" onclick="handleRegister()"><i class="fas fa-user-plus"></i> إنشاء حساب</button>
+                    <div class="msg-box" id="registerMsg"></div>
+                </div>
+                <div class="tab-panel" id="panelDoctor">
+                    <div class="text-center py-4">
+                        <i class="fas fa-chalkboard-teacher text-primary mb-4" style="font-size:3rem;"></i>
+                        <h3>أعضاء هيئة التدريس</h3>
+                        <p class="text-muted">الدخول حصري عبر حسابات Google المعتمدة</p>
+                    </div>
+                    <button class="btn btn-google" onclick="handleDoctorGoogleLogin()"><i class="fab fa-google"></i> Google Login</button>
+                    <div class="msg-box" id="doctorMsg"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="auth.js"></script>
+</body>
+</html>
+

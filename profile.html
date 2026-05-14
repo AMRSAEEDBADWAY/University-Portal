@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الملف الشخصي | المنصة الجامعية</title>
+    <link rel="stylesheet" href="global.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .profile-container { max-width: 800px; margin: 40px auto; display: grid; gap: 24px; position: relative; z-index: 10; padding: 20px; }
+        .profile-card { display: flex; align-items: center; gap: 24px; }
+        .profile-avatar { width: 120px; height: 120px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 3rem; color: white; box-shadow: var(--shadow-primary); flex-shrink: 0; overflow: hidden; }
+        .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .profile-info h1 { font-size: 1.8rem; margin-bottom: 8px; color: var(--text-100); }
+        .profile-info p { color: var(--text-300); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .stat-card { text-align: center; flex-direction: column; padding: 24px; }
+        .stat-icon { font-size: 2rem; color: var(--primary); margin-bottom: 12px; }
+        .stat-value { font-size: 1.5rem; font-weight: bold; color: var(--text-100); margin-bottom: 4px; }
+        .back-btn { display: inline-flex; align-items: center; gap: 8px; color: var(--text-300); text-decoration: none; margin-bottom: 20px; transition: color 0.3s; }
+        .back-btn:hover { color: var(--primary); }
+    </style>
+</head>
+<body>
+    <div class="bg-scene"><div class="bg-orb bg-orb-1"></div><div class="bg-orb bg-orb-2"></div><div class="bg-grid"></div></div>
+    <div class="profile-container">
+        <a href="dashboard.html" class="back-btn"><i class="fas fa-arrow-right"></i> العودة للوحة التحكم</a>
+        <div class="card profile-card">
+            <div class="profile-avatar" id="userAvatar"><i class="fas fa-user"></i></div>
+            <div class="profile-info">
+                <h1 id="userName">الطالب الجامعي</h1>
+                <p><i class="fas fa-envelope"></i> <span id="userEmail">student@university.edu</span></p>
+                <p><i class="fas fa-id-card"></i> <span>الرقم الأكاديمي: 20261024</span></p>
+                <p><i class="fas fa-graduation-cap"></i> <span>كلية الحاسبات والمعلومات - المستوى الثالث</span></p>
+            </div>
+        </div>
+        <div class="stats-grid">
+            <div class="card stat-card">
+                <div class="stat-icon"><i class="fas fa-book-open"></i></div>
+                <div class="stat-value">6</div>
+                <div class="text-muted">المواد المسجلة</div>
+            </div>
+            <div class="card stat-card">
+                <div class="stat-icon" style="color: var(--emerald);"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-value">12</div>
+                <div class="text-muted">التكليفات المنجزة</div>
+            </div>
+            <div class="card stat-card">
+                <div class="stat-icon" style="color: var(--amber);"><i class="fas fa-star"></i></div>
+                <div class="stat-value">3.8</div>
+                <div class="text-muted">المعدل التراكمي (GPA)</div>
+            </div>
+        </div>
+        <div class="card">
+            <h2 style="margin-bottom: 20px; color: var(--text-100);"><i class="fas fa-cog"></i> إعدادات الحساب</h2>
+            <div class="form-group"><label>الاسم بالكامل</label><input type="text" class="form-control" value="الطالب الجامعي" readonly></div>
+            <div class="form-group"><label>البريد الإلكتروني</label><input type="email" class="form-control" value="student@university.edu" readonly></div>
+            <button class="btn-premium btn-primary" onclick="alert('تم حفظ التعديلات بنجاح!')" style="margin-top: 10px;"><i class="fas fa-save"></i> حفظ التعديلات</button>
+        </div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script>if(!window.firebaseApps){firebase.initializeApp({apiKey:"AIzaSyAwb6hWFVzXDfk_0nawZvwQxFQc3HdHzuQ",authDomain:"university-8d799.firebaseapp.com",projectId:"university-8d799",storageBucket:"university-8d799.appspot.com",messagingSenderId:"1059820102357",appId:"1:1059820102357:web:400cbe69b8c6fd6b13b85c"});window.firebaseApps=true;}</script>
+    <script src="auth-guard.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            firebase.auth().onAuthStateChanged(async (user) => {
+                if (!user) return;
+                const emailEl = document.getElementById('userEmail'), nameEl = document.getElementById('userName'), avEl = document.getElementById('userAvatar');
+                emailEl.textContent = user.email || '';
+                let name = user.displayName || user.email?.split('@')[0] || 'مستخدم', pic = user.photoURL;
+                try {
+                    const snap = await firebase.firestore().collection('users').doc(user.uid).get();
+                    if (snap.exists) {
+                        const d = snap.data();
+                        name = d.name || name;
+                        pic = d.profilePic || d.photoURL || pic;
+                    }
+                } catch (e) { console.warn(e); }
+                nameEl.textContent = name;
+                avEl.innerHTML = pic ? `<img src="${pic}" alt="">` : `<span style="font-size:2.2rem;">${name[0].toUpperCase()}</span>`;
+            });
+        });
+    </script>
+</body>
+</html>
+

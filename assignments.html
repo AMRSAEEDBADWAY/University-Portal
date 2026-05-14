@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة الجامعة | الواجبات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="global.css">
+    <link rel="stylesheet" href="chatbot.css">
+    <link rel="stylesheet" href="assignments.css">
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script>if(!window.firebaseApps){firebase.initializeApp({apiKey:"AIzaSyAwb6hWFVzXDfk_0nawZvwQxFQc3HdHzuQ",authDomain:"university-8d799.firebaseapp.com",projectId:"university-8d799",storageBucket:"university-8d799.firebasestorage.app",messagingSenderId:"1059820102357",appId:"1:1059820102357:web:400cbe69b8c6fd6b13b85c"});window.firebaseApps=true;}</script>
+</head>
+<body>
+    <div class="bg-scene"><div class="bg-orb bg-orb-1"></div><div class="bg-orb bg-orb-2"></div><div class="bg-grid"></div></div>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+                <div><div class="logo-text">University Portal</div><span class="logo-sub">بوابة الجامعة الإلكترونية</span></div>
+            </div>
+            <nav class="sidebar-menu">
+                <a href="dashboard.html" class="menu-link"><i class="fas fa-th-large"></i> لوحة التحكم</a>
+                <a href="student_courses.html" class="menu-link"><i class="fas fa-book-open"></i> المواد الدراسية</a>
+                <a href="assignments.html" class="menu-link active"><i class="fas fa-tasks"></i> الواجبات الدراسية</a>
+                <a href="grades.html" class="menu-link"><i class="fas fa-chart-bar"></i> النتائج والدرجات</a>
+                <a href="schedule.html" class="menu-link"><i class="fas fa-calendar-alt"></i> الجدول الدراسي</a>
+                <a href="fees.html" class="menu-link"><i class="fas fa-wallet"></i> المصروفات المالية</a>
+                <div class="admin-only-section" style="display:none;"><a href="admin.html" class="menu-link"><i class="fas fa-user-shield"></i> لوحة الإدارة</a></div>
+            </nav>
+            <div class="sidebar-user">
+                <img src="" class="sidebar-user-avatar user-img" alt="">
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-name user-name">جاري...</div>
+                    <div class="sidebar-user-role user-role">طالب</div>
+                </div>
+                <button id="logoutBtn" title="خروج" class="btn-ghost" style="padding:8px;"><i class="fas fa-sign-out-alt"></i></button>
+            </div>
+        </aside>
+
+        <main class="main-wrapper">
+            <header class="top-nav">
+                <div><div class="nav-title">الواجبات الدراسية</div><div class="nav-sub">عرض وتسليم التكليفات المطلوبة</div></div>
+            </header>
+
+            <div class="page-header">
+                <div class="assignments-summary">
+                    <div class="summary-chip"><i class="fas fa-layer-group"></i> الكل <span class="chip-count" id="totalCount">0</span></div>
+                    <div class="summary-chip"><i class="fas fa-fire" style="color:#FF4757;"></i> عاجل <span class="chip-count" style="background:#FF4757;" id="urgentCount">0</span></div>
+                </div>
+            </div>
+
+            <div class="tabs-container">
+                <button class="tab-btn active" data-tab="pending"><i class="fas fa-hourglass-half"></i> مطلوبة <span class="tab-count" id="pendingCount">0</span></button>
+                <button class="tab-btn" data-tab="submitted"><i class="fas fa-paper-plane"></i> تم التسليم <span class="tab-count" id="submittedCount">0</span></button>
+                <button class="tab-btn" data-tab="graded"><i class="fas fa-award"></i> تم التصحيح <span class="tab-count" id="gradedCount">0</span></button>
+            </div>
+
+            <div class="tab-content active" id="pendingTab"><div class="assignments-list" id="pendingList"></div></div>
+            <div class="tab-content" id="submittedTab"><div class="assignments-list" id="submittedList"></div></div>
+            <div class="tab-content" id="gradedTab"><div class="assignments-list" id="gradedList"></div></div>
+        </main>
+    </div>
+
+    <!-- Submit Modal -->
+    <div class="modal-overlay" id="submitModal">
+        <div class="submit-modal">
+            <div class="modal-header">
+                <h2><i class="fas fa-upload"></i> تسليم الواجب</h2>
+                <button class="modal-close" onclick="closeSubmitModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-assignment-info"><h3 id="modalAssignTitle">اسم الواجب</h3><div class="deadline-info"><i class="fas fa-clock"></i> <span>آخر ميعاد: <strong id="modalDeadline">--</strong></span></div></div>
+                <input type="file" id="fileInput" hidden>
+                <div class="upload-area" id="uploadArea">
+                    <div id="uploadText"><div class="upload-icon" style="color:var(--primary-light);"><i class="fas fa-cloud-upload-alt"></i></div><h4>اضغط لاختيار ملف</h4><p id="uploadHintText">حد أقصى 380 كيلوبايت</p></div>
+                    <div class="file-info" id="fileInfo"><i class="fas fa-file-alt" style="color:var(--primary-light);"></i><div class="file-details"><div class="file-name" id="fileName"></div><div class="file-size" id="fileSize"></div></div><button class="remove-file" onclick="event.stopPropagation(); removeFile()"><i class="fas fa-trash-alt"></i></button></div>
+                </div>
+                <textarea class="note-input" id="submitNote" placeholder="ملاحظة (اختياري)..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal-submit" id="submitBtn" disabled onclick="submitAssignment()"><span class="spinner"></span><span class="btn-text"><i class="fas fa-paper-plane"></i> إرسال الواجب</span></button>
+                <button class="btn-modal-cancel" onclick="closeSubmitModal()">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-notification" id="toast"><div class="toast-icon"><i class="fas fa-check-circle" id="toastIcon"></i></div><span class="toast-text" id="toastText"></span></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="assignments.js"></script>
+    <script src="auth-guard.js?v=3"></script>
+    <script src="chatbot.js"></script>
+    <script src="router.js?v=3"></script>
+</body>
+</html>
+
+
